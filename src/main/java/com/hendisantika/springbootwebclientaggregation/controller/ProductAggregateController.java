@@ -1,9 +1,14 @@
 package com.hendisantika.springbootwebclientaggregation.controller;
 
+import com.hendisantika.springbootwebclientaggregation.dto.ProductAggregate;
 import com.hendisantika.springbootwebclientaggregation.service.ProductAggregatorService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Mono;
 
 /**
  * Created by IntelliJ IDEA.
@@ -21,4 +26,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class ProductAggregateController {
 
     private final ProductAggregatorService productAggregatorService;
+
+    @GetMapping("{productId}")
+    public Mono<ResponseEntity<ProductAggregate>> getProduct(@PathVariable Integer productId) {
+        return this.productAggregatorService.getProduct(productId)
+                .map(ResponseEntity::ok)
+                .defaultIfEmpty(ResponseEntity.notFound().build());
+    }
+
 }
