@@ -3,8 +3,15 @@ package com.hendisantika.springbootwebclientaggregation.service;
 import com.hendisantika.springbootwebclientaggregation.client.ProductClient;
 import com.hendisantika.springbootwebclientaggregation.client.PromotionClient;
 import com.hendisantika.springbootwebclientaggregation.client.ReviewClient;
+import com.hendisantika.springbootwebclientaggregation.dto.Product;
+import com.hendisantika.springbootwebclientaggregation.dto.ProductAggregate;
+import com.hendisantika.springbootwebclientaggregation.dto.Promotion;
+import com.hendisantika.springbootwebclientaggregation.dto.Review;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import reactor.util.function.Tuple3;
+
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -23,4 +30,12 @@ public class ProductAggregatorService {
     private final ProductClient productClient;
     private final PromotionClient promotionClient;
     private final ReviewClient reviewClient;
+
+    private ProductAggregate combine(Tuple3<Product, Promotion, List<Review>> tuple) {
+        return ProductAggregate.create(
+                tuple.getT1(),
+                tuple.getT2(),
+                tuple.getT3()
+        );
+    }
 }
