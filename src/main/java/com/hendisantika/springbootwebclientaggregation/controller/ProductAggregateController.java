@@ -22,12 +22,12 @@ import reactor.core.publisher.Mono;
  */
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("product")
+@RequestMapping("/product")
 public class ProductAggregateController {
 
     private final ProductAggregatorService productAggregatorService;
 
-    @GetMapping("{productId}")
+    @GetMapping("/{productId}")
     public Mono<ResponseEntity<ProductAggregate>> getProduct(@PathVariable Integer productId) {
         return this.productAggregatorService.getProduct(productId)
                 .map(ResponseEntity::ok)
