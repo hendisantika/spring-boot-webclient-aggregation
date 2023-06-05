@@ -9,6 +9,7 @@ import com.hendisantika.springbootwebclientaggregation.dto.Promotion;
 import com.hendisantika.springbootwebclientaggregation.dto.Review;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Mono;
 import reactor.util.function.Tuple3;
 
 import java.util.List;
@@ -30,6 +31,15 @@ public class ProductAggregatorService {
     private final ProductClient productClient;
     private final PromotionClient promotionClient;
     private final ReviewClient reviewClient;
+
+    public Mono<ProductAggregate> getProduct(Integer productId) {
+        return Mono.zip(
+                        this.productClient.getProduct(productId),
+                        this.promotionClient.getPromotion(productId),
+                        this.reviewClient.getReviews(productId)
+                )
+                .map(this::combine);
+    }
 
     private ProductAggregate combine(Tuple3<Product, Promotion, List<Review>> tuple) {
         return ProductAggregate.create(
