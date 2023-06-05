@@ -109,3 +109,28 @@ ratings-service
 ]
 ```
 
+We can use the below docker-compose yaml to expose REST APIs to access above information.
+
+```yaml
+version: '3.9'
+services:
+  server:
+    image: clue/json-server
+    ports:
+      - "3000:80"
+    volumes:
+      - ${PWD}/db.json:/data/db.json
+```
+
+For example, sending below requests to show the corresponding data.
+
+```shell
+# shows the product 1 information
+http://localhost:3000/products/1
+
+# shows the promotion details for product id = 1
+http://localhost:3000/promotions/1
+
+# to get all the reviews for product id = 1
+http://localhost:3000/reviews?productId=1
+```
