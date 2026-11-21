@@ -1,9 +1,79 @@
 version: 2
 updates:
+  # Maven dependencies (pom.xml + Maven wrapper)
   - package-ecosystem: maven
     directory: "/"
     schedule:
-      interval: daily
-      time: '21:00'
+      interval: weekly
+      day: monday
+      time: "07:00"
       timezone: Asia/Jakarta
     open-pull-requests-limit: 10
+    target-branch: main
+    labels:
+      - dependencies
+      - java
+    assignees:
+      - hendisantika
+    commit-message:
+      prefix: "chore(deps)"
+      prefix-development: "chore(deps-dev)"
+      include: scope
+    groups:
+      spring-boot:
+        patterns:
+          - "org.springframework.boot:*"
+          - "org.springframework:*"
+      netty:
+        patterns:
+          - "io.netty:*"
+      test-dependencies:
+        patterns:
+          - "org.junit*"
+          - "org.mockito*"
+          - "io.projectreactor:reactor-test"
+      maven-plugins:
+        patterns:
+          - "org.apache.maven*"
+    ignore:
+      # Major Spring Boot upgrades need manual migration
+      - dependency-name: "org.springframework.boot:spring-boot-starter-parent"
+        update-types: [ "version-update:semver-major" ]
+
+  # GitHub Actions used in workflows
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly
+      day: monday
+      time: "07:00"
+      timezone: Asia/Jakarta
+    open-pull-requests-limit: 5
+    labels:
+      - dependencies
+      - github_actions
+    assignees:
+      - hendisantika
+    commit-message:
+      prefix: "ci(deps)"
+    groups:
+      github-actions:
+        patterns:
+          - "*"
+
+  # Docker images referenced in docker-compose.yaml
+  - package-ecosystem: docker-compose
+    directory: "/"
+    schedule:
+      interval: weekly
+      day: monday
+      time: "07:00"
+      timezone: Asia/Jakarta
+    open-pull-requests-limit: 5
+    labels:
+      - dependencies
+      - docker
+    assignees:
+      - hendisantika
+    commit-message:
+      prefix: "chore(docker)"
